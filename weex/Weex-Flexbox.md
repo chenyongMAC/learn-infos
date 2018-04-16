@@ -1,3 +1,11 @@
+Digest:
+1.布局算法
+2.flex的盒模型
+3.iOS上可用的布局方案
+4.weex的布局方案
+5.Virtual Dom
+
+
 ## Weex布局算法
 
 #### 1.布局算法

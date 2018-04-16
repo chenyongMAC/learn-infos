@@ -20,15 +20,13 @@ Weex 盒模型基于 CSS 盒模型，每个 Weex 元素都可视作一个盒子�
 flexbox优于autolayout
 
 3.如何布局原生界面
-1）createRoot:
-当JSFramework把JS文件转换类似JSON的文件之后，就开始调用Native的callNative方法。
-callNative方法会最终执行WXBridgeContext类里面的[weakSelf invokeNative:instance tasks:tasks callback:callback]方法。这里会把JS从发送过来的callNative方法转换成Native的组件component的方法调用或者模块module的方法调用。
+iOS平台上几大可用的布局方法：
+1）Frame原生布局
+2）autolayout原生自动布局
+3）flexbox的yoga实现
+4）ASDK
 
-那么createRoot到底做了什么？
-a) 创建WXComponent
-b) 初始化css_node_t
-c) 添加UI任务到uiTaskQueue数组中
-
-
+weex：用JS的CSS解析成类似JSON的DOM（即转换为virtual dom），再调用Native的FlexBox算法进行布局
+美团的毕加索（picasso）：用到JSCore，将JS写的JSON或者自定义的DSL，经过本地的picassoEngine布局引擎转换成Native布局，最终利用锚点的概念做到高效的布局。
 
 

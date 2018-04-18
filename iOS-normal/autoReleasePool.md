@@ -60,7 +60,10 @@ objc_autoreleasePoolPop
 每当调用一次Push方法时，runtime向当前的AutoreleasePoolPage中add进一个哨兵对象，值为0（也就是个nil）。调用Pop时，会把当前next指针位置到上一个哨兵值位置之间的对象都释放掉，并重新记录next指针。
 所以，多层嵌套就会重复多次上面的操作。
 
+
 ## autorelease对象
+#### 释放方式：
 向一个对象发送autorelease消息，就是将这个对象加入到当前AutoreleasePoolPage的栈顶next指针指向的位置。所以这个对象的释放就听从于autoreleasepool了。
 
-
+#### 释放时机：
+Autorelease对象出了作用域之后，会被添加到最近一次创建的自动释放池中，并会在当前的 runloop 迭代结束时释放。

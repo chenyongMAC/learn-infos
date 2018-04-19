@@ -41,7 +41,7 @@ Sark *sark = tmp;
 objc_storeStrong(&sark, nil); // 相当于代替我们调用了release
 ```
 
-## 手动创建autoreleasepool
+## 需要手动创建autoreleasepool
 1.写的程序不是基于UIFrameWork，例如命令行项目
 
 2.写的循环大量创建临时对象。可以在循环中创建autoreleasepool，在池子中创建对象。这样有助于降低内存峰值。PS: 容器版本的block枚举器（enumerateObjectUsingBlock）会在内部自动添加pool。所以不需要手动添加。

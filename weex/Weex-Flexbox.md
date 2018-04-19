@@ -34,7 +34,7 @@ iOS平台上几大可用的布局方法：
 3）flexbox的yoga实现
 4）ASDK
 
-weex：用JS的CSS解析成类似JSON的DOM（即转换为virtual dom），再调用Native的FlexBox算法进行布局
+weex：把JS的CSS解析成类似JSON的DOM（即转换为virtual dom），再调用Native的FlexBox算法进行布局
 美团的毕加索（picasso）：用到JSCore，将JS写的JSON或者自定义的DSL，经过本地的picassoEngine布局引擎转换成Native布局，最终利用锚点的概念做到高效的布局。
 
 

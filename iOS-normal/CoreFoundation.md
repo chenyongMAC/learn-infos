@@ -1,0 +1,12 @@
+在Core Foundation框架和Foundation框架中有大量的可互换使用的数据类型。这意味着你可以使用相同的数据类型，作为Core Foundation框架方法调用或Objective－C消息的参数或接收者。这种在Core Foundation框架和Foundation框架之间交换使用数据类型的技术就叫 Toll-Free Bridging。
+
+由于ARC环境下编译器不会自动管理CF对象的内存，所以当我们创建了一个CF对象以后就需要我们使用CFRelease将其手动释放，那么CF和OC相互转化的时候该如何管理内存呢？答案就是我们在需要时可以使用__bridge,__bridge_transfer,__bridge_retained.
+
+1.__bridge
+__bridge只做类型转换，但是不修改对象（内存）管理权
+
+2.__bridge_transfer
+__bridge_transfer（也可以使用CFBridgingRelease）将Core Foundation的对象转换为Objective-C的对象，同时将对象（内存）的管理权交给ARC。
+
+3.__bridge_retained
+（也可以使用CFBridgingRetain）将Objective-C的对象转换为Core Foundation的对象，同时将对象（内存）的管理权交给我们，后续需要使用CFRelease或者相关方法来释放对象

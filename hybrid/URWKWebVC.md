@@ -1,3 +1,28 @@
+
+## Web Container方案
+1.纯浏览器方案：
+Native 除了扔给内嵌浏览器一个 URL 地址之外，就不做任何事情了，剩余的事情都由 Web 完成。这和用 Safari 或 Chrome 等普通浏览器打开一个网页并没有太多区别。只是我们固定了访问的地址。
+
+2.前端模板渲染方案：
+在客户端存储了一个 HTML 作为 UI 模板。Native 代码负责获取数据，向 HTML 文件模板中填入动态数据，得到一个可以在内嵌浏览器渲染的 HTML 文件。
+
+3.Hybrid方案：
+提供web容器和webView，并对webView提供扩展
+
+## Hybrid方案的功能
+
+1.提供route 一个url对应一个web page，本地路由表用于存放对应关系
+2.封装发出的API请求
+3.缓存web前端所需的静态文件和资源文件，如HTML、CSS、JavaScript、Image等
+4.提供原生支持的功能
+
+## 页面执行过程
+1.打开一个URL
+2.根据URL查询本地缓存的路由表。如果没记录，请求全量更新本地路由
+3.拿到html后，查看本地是否有缓存。如果没有，请求远端html，并缓存
+4.web容器正常使用流程，如下
+
+#### web容器使用概览
 1.configuration配置，生成webview
 2.监听title，estimatedProgress，提供标题，进度条
 3.navigationItem: back, close, actions
@@ -10,11 +35,9 @@
 
 
 
-
-
-
-wkwebview’s problem
+## wkwebview’s problem
 来源：https://mp.weixin.qq.com/s/rhYKLIbXOsUJC_n6dt9UfA
+
 1.白屏：
 在 UIWebView 上当内存占用太大的时候，App Process 会 crash；而在 WKWebView 上当总体的内存占用比较大的时候，WebContent Process 会 crash，从而出现白屏现象。
 

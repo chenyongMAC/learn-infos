@@ -23,15 +23,20 @@ Native 除了扔给内嵌浏览器一个 URL 地址之外，就不做任何事�
 4.web容器正常使用流程，如下
 
 #### web容器使用概览
-1.configuration配置，生成webview
+1.configuration配置，注入本地js，生成webview
 2.监听title，estimatedProgress，提供标题，进度条
 3.navigationItem: back, close, actions
 4.UIDelegate：弹框
 5.NavigationDelegate
-6.userContentController注入js，接收scriptMessage
+6.userContentController接收scriptMessage，message中包括以下内容：
+target name, action name, callbackId, params
+
 7.didReceiveScriptMessage
 8.NSMethodSignature，用方法名生成方法调用（方法名由web端提供）
-9.提供全局字典，存放注册的组件。key = function name,  value = widgets‘ object
+9.使用target-action匹配前端的方法调用
+前端提供target name和action name，本地用methodSignatureForSelector方法生成NSMethodSignature对象。如果成功，则使用NSInvocation转发消息；如果失败，则结束此次调用。
+
+10.action调用完后，如果有callbackId，将callbackId和params统一回传给前端。使用的是_handleMessageFromApp方法，该方法会判断message type字段，如果是回调内容，会去方法缓存表中找到回调函数并执行。（即，回调函数的处理，其实是在注入的js中的）
 
 
 
@@ -80,7 +85,7 @@ WKWebView 在独立于 app 进程之外的进程中执行网络请求，请求�
 通过注册 http(s) scheme 后 WKWebView 将可以使用 NSURLProtocol 拦截 http(s) 请求。但是这种方案有2个严重的问题：
 
 1）post请求的body数据被清空
-由于 WKWebView 在独立进程里执行网络请求。一旦注册 http(s) scheme 后，网络请求将从 Network Process 发送到 App Process，这样 NSURLProtocol 才能拦截网络请求。在 webkit2 的设计里使用 MessageQueue 进行进程之间的通信，Network Process 会将请求 encode 成一个 Message,然后通过 IPC 发送给 App Process。出于性能的原因，encode 的时候 HTTPBody 和 HTTPBodyStream 这两个字段被丢弃掉了
+WebKit 进程是独立于 app 进程之外的，两个进程之间使用消息队列的方式进行进程间通信。比如 app 想使用 WKWebView 加载一个请求的话，就要把请求的参数打包成一个 Message，然后通过 IPC 把 Message 交给 WebKit 去加载，反过来 WebKit 的请求想传到 app 进程的话（比如 URLProtocol ），也要打包成 Message 走 IPC。出于性能的原因，打包的时候 HTTPBody 和 HTTPBodyStream 这两个字段被丢弃掉了
 
 2）对ATS支持不足
 测试发现一旦打开ATS开关：Allow Arbitrary Loads 选项设置为NO，同时通过 registerSchemeForCustomProtocol 注册了 http(s) scheme，WKWebView 发起的所有 http 网络请求将被阻塞（即便将Allow Arbitrary Loads in Web Content 选项设置为YES）

@@ -1,1 +1,9 @@
-https://github.com/halfrost/Halfrost-Field/tree/master/contents/iOS/Weex
+## 1.为什么选择weex
+1.需要一套兼顾性能与动态性的技术方案来支撑丰富的业务需求
+2.团队的技术栈是Vue，上手简单一些
+3.三端支持，到多端支持
+
+## 2.使用中考虑的问题
+1.单页or多页
+2.页面跳转会存在什么问题
+3.页面跳转传参

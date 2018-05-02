@@ -37,13 +37,14 @@ target name, action name, callbackId, params
 前端提供target name和action name，本地用methodSignatureForSelector方法生成NSMethodSignature对象。如果成功，则使用NSInvocation转发消息；如果失败，则结束此次调用。
 
 10.action调用完后，如果有callbackId，将callbackId和params统一回传给前端。使用的是_handleMessageFromApp方法，该方法会判断message type字段，如果是回调内容，会去方法缓存表中找到回调函数并执行。（即，回调函数的处理，其实是在注入的js中的）
+11.RU项目中没有使用通常概念上的session+cookie来存放信息。RU中登录时，服务器会下发一个openID；以后每次打开webView时，服务器会优先获取本地存储的openID。
 
 
 
 ## wkwebview’s problem
 来源：https://mp.weixin.qq.com/s/rhYKLIbXOsUJC_n6dt9UfA
 
-1.白屏：
+#### 1.白屏：
 在 UIWebView 上当内存占用太大的时候，App Process 会 crash；而在 WKWebView 上当总体的内存占用比较大的时候，WebContent Process 会 crash，从而出现白屏现象。
 
 解决：
@@ -51,7 +52,7 @@ target name, action name, callbackId, params
 2）webViewWebContentProcessDidTerminate，reload
 
 
-2.cookie
+#### 2.cookie
 WKWebView Cookie 问题在于 WKWebView 发起的请求不会自动带上存储于 NSHTTPCookieStorage 容器中的 Cookie。
 
 解决：
@@ -79,7 +80,7 @@ WKUserScript * cookieScript = [[WKUserScript alloc] initWithSource: @"document.c
 
 
 
-3.NSURLProtocol问题
+#### 3.NSURLProtocol问题
 WKWebView 在独立于 app 进程之外的进程中执行网络请求，请求数据不经过主进程，因此，在 WKWebView 上直接使用 NSURLProtocol 无法拦截请求。
 
 通过注册 http(s) scheme 后 WKWebView 将可以使用 NSURLProtocol 拦截 http(s) 请求。但是这种方案有2个严重的问题：
@@ -91,7 +92,7 @@ WebKit 进程是独立于 app 进程之外的，两个进程之间使用消息�
 测试发现一旦打开ATS开关：Allow Arbitrary Loads 选项设置为NO，同时通过 registerSchemeForCustomProtocol 注册了 http(s) scheme，WKWebView 发起的所有 http 网络请求将被阻塞（即便将Allow Arbitrary Loads in Web Content 选项设置为YES）
 
 
-4.loadRequest问题
+#### 4.loadRequest问题
 在 WKWebView 上通过 loadRequest 发起的 post 请求 body 数据会丢失：
 
 ```
